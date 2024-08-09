@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     database:process.env.DB_NAME
 })
 
-db.connect((err)=>{
+ db.connect((err)=>{
  if(err){
     console.error("Database connection failed",err)
  }
@@ -19,4 +19,5 @@ db.connect((err)=>{
     console.log('Connection successful.')
  }
 })
+
 module.exports = db

@@ -18,10 +18,12 @@ router.post('/', async (req, res) => {
         }
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 12);
+        //const salt = bcrypt.genSalt(10)
+
+        const hashedPassword = bcrypt.hash(password, 10);
 
         // Insert the new user into the database
-        const row = await conn.execute(
+        const row = conn.execute(
             'INSERT INTO Users (name, email, password) VALUES (?, ?, ?)',
             [name, email, hashedPassword]
         )
@@ -29,7 +31,7 @@ router.post('/', async (req, res) => {
         //Optionally, generate a JWT token
         //const token = jwt.sign({ userId: row.insertId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ message: 'User registered successfully', token });
+        //res.status(201).json({ message: 'User registered successfully', token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
