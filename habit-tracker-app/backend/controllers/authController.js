@@ -1,16 +1,29 @@
-import conn from '../config/db';
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { findByEmail, create } from '../models/Users.js'
+import { registerValidation, validate } from '../middlewares/userValidation.js'
 
-//Check existing user by email
+export async function register(req, res) {
+    await validate(req, res, async () => {
+        const { name, email, password } = req.body;
 
-const findByEmail = async (email) => {
-    const rows = conn.query('SELECT * FROM users WHERE email = ?', [email]);
-    return rows[0];
+        try {
+            const existingUser = await findByEmail(email);
+            if (existingUser) {
+                return res.status(400).json({ message: 'User already exists' })
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 12);
+            await create(name, email, hashedPassword);
+             res.send("New User created") 
+            // const token = sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+            // res.status(201).json({ token });
+        } catch (error) {
+            res.status(500).json({ message: error.message});
+        }
+    })
 }
 
-//insert a new user
 
-const createUser = async (name,email,password) => {
-   conn.query(' INSERT INTO Users (name, email, password) VALUES (?, ?, ?) ', [name, email, password])
-}
 
-module.exports = {findByEmail,createUser}
