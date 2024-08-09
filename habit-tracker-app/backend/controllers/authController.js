@@ -1,26 +1,26 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { findByEmail, create } from '../models/Users.js'
+import { findUserByEmail, createNewUser } from '../models/Users.js'
 import { registerValidation, validate } from '../middlewares/userValidation.js'
 
 export async function register(req, res) {
     await validate(req, res, async () => {
-        const { name, email, password } = req.body;
+        const { name, email, password } = req.body
 
         try {
-            const existingUser = await findByEmail(email);
+            const existingUser = await findUserByEmail(email)
             if (existingUser) {
                 return res.status(400).json({ message: 'User already exists' })
             }
 
-            const hashedPassword = await bcrypt.hash(password, 12);
-            await create(name, email, hashedPassword);
-             res.send("New User created") 
+            const hashedPassword = await bcrypt.hash(password, 12)
+            await createNewUser(name, email, hashedPassword)
+            res.send("New User created")
             // const token = sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
-            // res.status(201).json({ token });
+            // res.status(201).json({ token })
         } catch (error) {
-            res.status(500).json({ message: error.message});
+            res.status(500).json({ message: error.message })
         }
     })
 }
