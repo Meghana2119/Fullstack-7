@@ -3,11 +3,18 @@ import conn from '../config/db.js'
 //Check existing user by email
 
 const findUserByEmail = async (email) => {
-    const rows = conn.query('SELECT * FROM users WHERE email = ?', [email], (err, rows, fields) => {
-
-        return rows[0]
-    }
-    )
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+            if (err) {
+                return reject(err);  // Handle the error
+            }
+            if (results.length > 0) {
+                resolve(results[0]);  // Return the first user found
+            } else {
+                resolve(null);  // No user found
+            }
+        })
+    })
 }
 //insert a new user
 

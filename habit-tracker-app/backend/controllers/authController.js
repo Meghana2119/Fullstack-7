@@ -9,6 +9,7 @@ async function register(req, res) {
 
         try {
             const existingUser = await findUserByEmail(email)
+            console.log(existingUser)
             if (existingUser) {
                 return res.status(400).json({ message: 'User already exists' })
             }
@@ -16,6 +17,7 @@ async function register(req, res) {
             const hashedPassword = await bcrypt.hash(password, 12)
             await createNewUser(name, email, hashedPassword)
             res.send("New User created")
+            //Todo active token,refresh token
             // const token = sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 
             // res.status(201).json({ token })
