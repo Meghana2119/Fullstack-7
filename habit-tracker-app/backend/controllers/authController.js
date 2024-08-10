@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { findUserByEmail, createNewUser } from '../models/Users.js'
 import { registerValidation, validate } from '../middlewares/userValidation.js'
 
-export async function register(req, res) {
+async function register(req, res) {
     await validate(req, res, async () => {
         const { name, email, password } = req.body
 
@@ -25,5 +25,6 @@ export async function register(req, res) {
     })
 }
 
+export {register}
 
 

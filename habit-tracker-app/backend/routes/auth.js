@@ -1,8 +1,9 @@
 import { Router } from 'express'
-const router = Router()
 import { registerValidation, validate } from '../middlewares/userValidation.js'
 import { register } from '../controllers/authController.js'
 
+
+const router = Router()
 // Registration route
 router.post('/register', registerValidation, register)
 

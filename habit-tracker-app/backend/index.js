@@ -12,7 +12,9 @@ const port = process.env.PORT
 //Middleware
 app.use(json())
 
-// register the user
+// register the user-routes declaration 
+//Todo add version of API /api/v1
+//Todo create App.js 
 app.use('/api', auth)
 
 
