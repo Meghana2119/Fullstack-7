@@ -13,11 +13,11 @@ async function register(req, res) {
             if (existingUser) {
                 return res.status(400).json({ message: 'User already exists' })
             }
-            if (
-                [name, email, password].some((field) =>
-                    field?.trim() == "")
+            // if (
+            //     [name, email, password].some((field) =>
+            //         field?.trim() == "")
 
-            ) { throw "Fields required" }
+            // ) { throw "Fields required" }
             const hashedPassword = await bcrypt.hash(password, 12)
             await createNewUser(name, email, hashedPassword)
             res.send("New User created")
