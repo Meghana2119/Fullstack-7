@@ -1,10 +1,12 @@
 import { body, validationResult } from 'express-validator'
+import conn from '../config/db.js'
+import bcrypt from 'bcryptjs'
 
 //Validation process using express-validator
 
 const registerValidation = [
     body('name').notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Invalid email address'),
+    body('email').isEmail().withMessage('Invalid email address').normalizeEmail(),
     body('password').isLength({ min: 12 }).withMessage('Password must be at least 12 characters long')
 ]
 
@@ -17,5 +19,32 @@ const validate = (req, res, next) => {
     }
     next()
 }
+const loginCheck = (req,res,next)=>{
+    const { name, password } = req.body;
+  //conn.query("SELECT name,password FROM users ")
+ 
+  conn.query("SELECT name, password FROM users WHERE name = ?", [name], async (err, result, fields) => {
+    if (err) throw err;
+        if (result.length == 0) {
+         console.log("--------> User does not exist")
+         res.sendStatus(404)
+        } 
+        else {
+           const hashedPassword = result[0].password
+           
+           //get the hashedPassword from result forgot await here so got wrong output
+           if (await bcrypt.compare(password, hashedPassword)) {
+          console.log("---------> Login Successful")
+          res.send(`${name} is logged in!`)
+          } 
+          else {
+          console.log("---------> Password Incorrect")
+          res.send("Password incorrect!")
+          } //end of bcrypt.compare()
+        }
+  })
 
-export { registerValidation, validate }
+
+}
+
+export { registerValidation, validate,loginCheck }
