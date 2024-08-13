@@ -1,15 +1,18 @@
 import express, { json } from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
-//import connectToDb from './config/db'
 import "./config/db.js"
 import auth from './routes/auth.js'
+import cors from'cors'
 
 
 const app = express()
 const port = process.env.PORT 
 
 //Middleware
+
+app.use(cors({ origin: 'http://localhost:5173' }));
+
 app.use(json())
 
 // register the user-routes declaration 

@@ -24,9 +24,10 @@ const loginCheck = (req,res,next)=>{
   //conn.query("SELECT name,password FROM users ")
  
   conn.query("SELECT name, password FROM users WHERE name = ?", [name], async (err, result, fields) => {
-    if (err) throw err;
-        if (result.length == 0) {
-         console.log("--------> User does not exist")
+        if (err) throw err;
+        if (result.length === 0) /* change to thre equals to, to work properly*/{
+          console.log(result.length)
+         console.log(" User does not exist")
          res.sendStatus(404)
         } 
         else {
@@ -39,7 +40,7 @@ const loginCheck = (req,res,next)=>{
           } 
           else {
           console.log("---------> Password Incorrect")
-          res.send("Password incorrect!")
+          res.send("Password incorrect!")// to send proper response, on homepage
           } //end of bcrypt.compare()
         }
   })
