@@ -60,7 +60,7 @@ export const Login = (props) => {
         try {
             const response = await axios.post('http://localhost:3000/api/login', {
                 name,
-                password,//add email if needs to check email
+                password,//add email instaeds of name if needs to check email
             });
 
             // Display the success message
@@ -71,12 +71,12 @@ export const Login = (props) => {
                 localStorage.setItem('token', response.data.token);
             }
 
-            //Todo Uncomment if you want to navigate after successful login
+            //Todo  if you want to navigate after successful login
             // navigate('/dashboard');
         } catch (error) {
             console.error("Login error:", error);
 
-            // Handle error and display message
+            // if any error
             if (error.response) {
                 setMessage(error.response.data.message || "Login failed");
             } else {
@@ -97,7 +97,7 @@ export const Login = (props) => {
                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="*********" id="password" name="password"/>
                 <button type="submit">Log In</button>
             </form>
-            {message && <div id="success-message">{message}</div>}  {/* Display the message */}
+            {message && <div id="success-message">{message}</div>}  {/* Display the sucess message */}
             <button className="linkButton" onClick={() => props.onFormSwitch("Register")}> Don't have an account? Register Here</button>
         </div>
     );

@@ -22,6 +22,7 @@ const validate = (req, res, next) => {
 
 const loginCheck = async (req, res, next) => {
   const { name, password } = req.body;
+  const jwt_token_key=process.env.JWT_TOKEN_KEY
 
   try {
       conn.query("SELECT name, password FROM users WHERE name = ?", [name], async (err, result, fields) => {
@@ -35,7 +36,7 @@ const loginCheck = async (req, res, next) => {
 
               if (await bcrypt.compare(password, hashedPassword)) {
                   console.log("Login Successful");
-                  return res.status(200).json({ message: "Login successful", token: "your-jwt-token-here" });
+                  return res.status(200).json({ message: "Login successful", token:jwt_token_key }) //"your-jwt-token-here" });
               } else {
                   console.log("Password Incorrect");
                   return res.status(401).json({ message: "Password incorrect" });
