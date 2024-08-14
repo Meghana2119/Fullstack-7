@@ -4,7 +4,8 @@ import { findUserByEmail, createNewUser } from '../models/Users.js'
 import { registerValidation, validate } from '../middlewares/userValidation.js'
 
 async function register(req, res) {
-    await validate(req, res, async () => {
+    //removing await from validate
+     validate(req, res, async () => {
         const { name, email, password } = req.body
 
         try {
@@ -20,7 +21,8 @@ async function register(req, res) {
             // ) { throw "Fields required" }
             const hashedPassword = await bcrypt.hash(password, 12)
             await createNewUser(name, email, hashedPassword)
-            res.send("New User created")
+            res.status(201).json({ message: 'New User created'})
+            //res.send("New User created")
             //Todo active token,refresh token
             // const token = sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' })
 

@@ -12,7 +12,7 @@ const registerValidation = [
 
 // Middleware to handle validation results
 const validate = (req, res, next) => {
-    console.log('Running validation middleware'); // Debug log
+    console.log('Running validation middleware'); // Debug 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
@@ -36,7 +36,7 @@ const loginCheck = async (req, res, next) => {
 
               if (await bcrypt.compare(password, hashedPassword)) {
                   console.log("Login Successful");
-                  return res.status(200).json({ message: "Login successful", token:jwt_token_key }) //"your-jwt-token-here" });
+                  return res.status(200).json({ message: "Login successful", token:jwt_token_key }) 
               } else {
                   console.log("Password Incorrect");
                   return res.status(401).json({ message: "Password incorrect" });
