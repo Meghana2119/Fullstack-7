@@ -19,33 +19,33 @@ const validate = (req, res, next) => {
     }
     next()
 }
-const loginCheck = (req,res,next)=>{
-    const { name, password } = req.body;
-  //conn.query("SELECT name,password FROM users ")
- 
-  conn.query("SELECT name, password FROM users WHERE name = ?", [name], async (err, result, fields) => {
-        if (err) throw err;
-        if (result.length === 0) /* change to thre equals to, to work properly*/{
-          console.log(result.length)
-         console.log(" User does not exist")
-         res.sendStatus(404)
-        } 
-        else {
-           const hashedPassword = result[0].password
-           
-           //get the hashedPassword from result forgot await here so got wrong output
-           if (await bcrypt.compare(password, hashedPassword)) {
-          console.log("---------> Login Successful")
-          res.send(`${name} is logged in!`)
-          } 
-          else {
-          console.log("---------> Password Incorrect")
-          res.send("Password incorrect!")// to send proper response, on homepage
-          } //end of bcrypt.compare()
-        }
-  })
 
+const loginCheck = async (req, res, next) => {
+  const { name, password } = req.body;
 
-}
+  try {
+      conn.query("SELECT name, password FROM users WHERE name = ?", [name], async (err, result, fields) => {
+          if (err) throw err;
+
+          if (result.length === 0) {
+              console.log("User does not exist");
+              return res.status(404).json({ message: "User does not exist" });
+          } else {
+              const hashedPassword = result[0].password;
+
+              if (await bcrypt.compare(password, hashedPassword)) {
+                  console.log("Login Successful");
+                  return res.status(200).json({ message: "Login successful", token: "your-jwt-token-here" });
+              } else {
+                  console.log("Password Incorrect");
+                  return res.status(401).json({ message: "Password incorrect" });
+              }
+          }
+      });
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export { registerValidation, validate,loginCheck }
